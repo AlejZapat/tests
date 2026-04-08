@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Diagnóstico PMI-CP</title>
+    <link rel="stylesheet" href="diagnostic-exam.css">
+</head>
+<body>
+    <div id="exam-root"></div>
+
+    <script src="cp-exam.js"></script>
+    <script src="diagnostic-exam.js"></script>
+    <script>
+        // ─── Instanciación PMI-CP ──────────────────────────────────────────────────
+        const exam = new DiagnosticExam({
+            container:  document.getElementById('exam-root'),
+            title:      'PMI-CP (Construction Professional)',
+            questions:  cpQuestions,
+            examSize:   30,
+            showReset:  false,
+
+            /**
+             * Distribuciones alineadas al ECO PMI-CP (Febrero 2024):
+             *   - domain:    pesos exactos de los 4 dominios del ECO
+             *   - method:    70% predictivo / 20% híbrido / 10% ágil
+             *   - cognitive: pirámide estándar de Bloom adaptada al examen
+             *   - format:    proporciones del banco de 60 preguntas
+             */
+            distributions: {
+                domain: {
+                    'gestión_de_contratos':              0.50,
+                    'participación_de_interesados':      0.30,
+                    'gestión_de_estrategias_y_alcance':  0.15,
+                    'gobernanza_del_proyecto':           0.05
+                },
+                method: {
+                    predictivo: 0.70,
+                    híbrido:    0.20,
+                    ágil:       0.10
+                },
+                cognitive: {
+                    conocimiento: 0.20,
+                    aplicación:   0.50,
+                    análisis:     0.30
+                },
+                format: {
+                    'opción_única':    0.65,
+                    'opción_múltiple': 0.25,
+                    ordenamiento:      0.10
+                }
+            },
+
+            /** Dimensiones que aparecen en la tabla de resultados */
+            reportDimensions: ['domain', 'cognitive'],
+
+            /** Etiquetas legibles para la UI */
+            labels: {
+                domain: {
+                    _label:                             'Dominio',
+                    'gestión_de_contratos':             'Gestión de Contratos',
+                    'participación_de_interesados':     'Participación de Interesados',
+                    'gestión_de_estrategias_y_alcance': 'Gestión de Estrategias y Alcance',
+                    'gobernanza_del_proyecto':          'Gobernanza del Proyecto'
+                },
+                method: {
+                    _label:     'Enfoque',
+                    predictivo: 'Predictivo',
+                    híbrido:    'Híbrido',
+                    ágil:       'Ágil'
+                },
+                cognitive: {
+                    _label:       'Nivel cognitivo',
+                    conocimiento: 'Conocimiento',
+                    aplicación:   'Aplicación',
+                    análisis:     'Análisis'
+                },
+                format: {
+                    _label:            'Formato',
+                    'opción_única':    'Opción única',
+                    'opción_múltiple': 'Opción múltiple',
+                    ordenamiento:      'Ordenamiento'
+                }
+            }
+        });
+    </script>
+</body>
+</html>

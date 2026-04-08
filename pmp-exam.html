@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examen Diagnóstico PMI-PMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="diagnostic-exam.css">
+</head>
+<body>
+<div id="pmp-exam"></div>
+
+<script src="diagnostic-exam.js"></script>
+<script src="pmp-exam.js"></script>
+<script>
+    const exam = new DiagnosticExam({
+        container:  document.getElementById('pmp-exam'),
+        title: 'PMP (Project Management Professional)',
+        questions:  pmpQuestions,
+        examSize:   30,
+        showReset:  false,
+
+        distributions: {
+            domain:    { 
+                personas: 0.42, 
+                procesos: 0.50, 
+                negocio: 0.08 
+            },
+            method:    { 
+                predictivo: 0.90, 
+                ágil: 0.10 
+            },
+            cognitive: { 
+                conocimiento: 0.20, 
+                aplicación: 0.50, 
+                análisis: 0.30 
+            },
+            format:    { 
+                'opción_única': 0.68, 
+                'opción_múltiple': 0.22, 
+                ordenamiento: 0.10 
+            }
+        },
+
+        reportDimensions: ['domain', 'cognitive'],
+
+        labels: {
+            domain:    { 
+                personas: 'Personas', 
+                procesos: 'Proceso', 
+                negocio: 'Entorno de Negocio', 
+                _label: 'Dominio' 
+            },
+            cognitive: { 
+                conocimiento: 'Conocimiento', 
+                aplicación: 'Aplicación', 
+                análisis: 'Análisis', 
+                _label: 'Nivel cognitivo' 
+            },
+            method:    { 
+                predictivo: 'Predictivo', 
+                ágil: 'Ágil' 
+            }
+        }
+    });
+</script>
+</body>
+</html>

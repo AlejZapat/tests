@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test de Autoconocimiento — Cerebro Completo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Variables ─────────────────────────────────────────────── */
+:root {
+    --azul:       #1a3a6b;
+    --verde:      #2d6a3f;
+    --rojo:       #c0392b;
+    --amarillo:   #c8920a;
+    --azul-bg:    #e8eef7;
+    --verde-bg:   #e8f4ec;
+    --rojo-bg:    #faeaea;
+    --amarillo-bg:#fdf4e0;
+    --ink:        #1c1c1e;
+    --ink-2:      #444;
+    --ink-3:      #777;
+    --paper:      #faf9f6;
+    --rule:       #ddd;
+    --ff-display: 'Playfair Display', Georgia, serif;
+    --ff-body:    'Source Serif 4', Georgia, serif;
+    --ff-mono:    'JetBrains Mono', monospace;
+    --max-w:      780px;
+    --radius:     4px;
+}
+
+/* ── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--ff-body);
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+/* ── Layout ────────────────────────────────────────────────── */
+.container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+
+/* ── Header ────────────────────────────────────────────────── */
+header {
+    border-bottom: 2px solid var(--ink);
+    padding: 48px 0 32px;
+    margin-bottom: 56px;
+}
+.header-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+}
+header h1 {
+    font-family: var(--ff-display);
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 16px;
+}
+header h1 em { font-style: italic; color: var(--ink-2); }
+header p { color: var(--ink-2); font-size: 15px; max-width: 580px; }
+
+/* ── Color bar ─────────────────────────────────────────────── */
+.color-bar {
+    display: flex; height: 5px; margin-bottom: 48px;
+    border-radius: 2px; overflow: hidden;
+}
+.color-bar span { flex: 1; }
+.color-bar .b { background: var(--azul); }
+.color-bar .g { background: var(--verde); }
+.color-bar .r { background: var(--rojo); }
+.color-bar .y { background: var(--amarillo); }
+
+/* ── Progress ──────────────────────────────────────────────── */
+#progress-wrap {
+    margin-bottom: 40px; display: flex; align-items: center; gap: 16px;
+}
+#progress-bar-track {
+    flex: 1; height: 3px; background: var(--rule);
+    border-radius: 2px; overflow: hidden;
+}
+#progress-bar-fill {
+    height: 100%; background: var(--ink); width: 0%;
+    transition: width .4s ease;
+}
+#progress-label {
+    font-family: var(--ff-mono); font-size: 12px;
+    color: var(--ink-3); white-space: nowrap;
+}
+
+/* ── Questions ─────────────────────────────────────────────── */
+.question-block {
+    margin-bottom: 48px; padding-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+    opacity: 0; transform: translateY(18px);
+    animation: fadeUp .45s ease forwards;
+}
+@keyframes fadeUp { to { opacity: 1; transform: none; } }
+.question-block:last-child { border-bottom: none; }
+.q-number {
+    font-family: var(--ff-mono); font-size: 11px;
+    letter-spacing: .12em; color: var(--ink-3);
+    text-transform: uppercase; margin-bottom: 8px;
+}
+.q-text {
+    font-family: var(--ff-display); font-size: 18px;
+    font-weight: 700; margin-bottom: 20px; line-height: 1.4;
+}
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option-label {
+    display: flex; align-items: flex-start; gap: 14px;
+    cursor: pointer; padding: 12px 16px;
+    border: 1px solid var(--rule); border-radius: var(--radius);
+    transition: border-color .2s, background .2s;
+    font-size: 15px; color: var(--ink-2);
+}
+.option-label:hover { border-color: var(--ink-3); background: #f3f2ef; }
+.option-label input[type="radio"] { display: none; }
+.option-label .opt-key {
+    font-family: var(--ff-mono); font-size: 12px; font-weight: 500;
+    min-width: 20px; color: var(--ink-3); padding-top: 2px;
+}
+.option-label.selected { border-color: var(--ink); background: var(--ink); color: #fff; }
+.option-label.selected .opt-key { color: rgba(255,255,255,.6); }
+
+/* ── Submit ────────────────────────────────────────────────── */
+#submit-wrap { margin: 8px 0 80px; display: flex; flex-direction: column; gap: 12px; }
+#submit-btn {
+    align-self: flex-start; background: var(--ink); color: #fff;
+    border: none; padding: 14px 40px; font-family: var(--ff-mono);
+    font-size: 13px; letter-spacing: .1em; text-transform: uppercase;
+    cursor: pointer; border-radius: var(--radius); transition: opacity .2s;
+}
+#submit-btn:hover { opacity: .82; }
+#submit-btn:disabled { opacity: .35; cursor: not-allowed; }
+#form-error { font-size: 13px; color: var(--rojo); font-family: var(--ff-mono); display: none; }
+
+/* ── Results ───────────────────────────────────────────────── */
+#results-section { display: none; padding-top: 24px; }
+
+.section-divider { border: none; border-top: 2px solid var(--ink); margin: 64px 0 48px; }
+
+.results-header { margin-bottom: 36px; }
+.results-header h2 {
+    font-family: var(--ff-display);
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 700; margin-bottom: 6px;
+}
+.results-subtitle { color: var(--ink-3); font-size: 13px; font-family: var(--ff-mono); }
+
+/* ── Score cards ───────────────────────────────────────────── */
+.score-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-bottom: 16px;
+}
+@media (max-width: 480px) { .score-grid { grid-template-columns: 1fr; } }
+
+.score-card {
+    border: 1px solid var(--rule); border-radius: var(--radius);
+    padding: 20px 24px; position: relative; overflow: hidden;
+}
+.score-card.dominant { border-width: 2px; }
+.score-card.dominant::after {
+    content: 'DOMINANTE'; position: absolute; top: 12px; right: 12px;
+    font-family: var(--ff-mono); font-size: 9px; letter-spacing: .12em;
+    padding: 3px 8px; border-radius: 2px;
+}
+.score-card.azul    { border-color: var(--azul);    background: var(--azul-bg); }
+.score-card.verde   { border-color: var(--verde);   background: var(--verde-bg); }
+.score-card.rojo    { border-color: var(--rojo);    background: var(--rojo-bg); }
+.score-card.amarillo{ border-color: var(--amarillo);background: var(--amarillo-bg); }
+.score-card.azul.dominant::after    { background: var(--azul);    color: #fff; }
+.score-card.verde.dominant::after   { background: var(--verde);   color: #fff; }
+.score-card.rojo.dominant::after    { background: var(--rojo);    color: #fff; }
+.score-card.amarillo.dominant::after{ background: var(--amarillo);color: #fff; }
+
+.sc-label {
+    font-family: var(--ff-mono); font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px;
+}
+.sc-label.azul    { color: var(--azul); }
+.sc-label.verde   { color: var(--verde); }
+.sc-label.rojo    { color: var(--rojo); }
+.sc-label.amarillo{ color: var(--amarillo); }
+
+.sc-name { font-family: var(--ff-display); font-size: 19px; font-weight: 700; margin-bottom: 14px; }
+
+.sc-bar-row { display: flex; align-items: center; gap: 10px; }
+.sc-score-label { font-family: var(--ff-mono); font-size: 12px; color: var(--ink-3); min-width: 94px; }
+.sc-bar-track { flex: 1; height: 6px; background: rgba(0,0,0,.1); border-radius: 3px; overflow: hidden; }
+.sc-bar-fill {
+    height: 100%; border-radius: 3px; width: 0%;
+    transition: width .8s cubic-bezier(.4,0,.2,1);
+}
+.sc-bar-fill.azul    { background: var(--azul); }
+.sc-bar-fill.verde   { background: var(--verde); }
+.sc-bar-fill.rojo    { background: var(--rojo); }
+.sc-bar-fill.amarillo{ background: var(--amarillo); }
+.sc-pct { font-family: var(--ff-mono); font-size: 13px; font-weight: 500; min-width: 38px; text-align: right; }
+
+/* ── Executive summary ─────────────────────────────────────── */
+#exec-summary {
+    font-size: 14.67px; line-height: 1.65;
+    font-family: var(--ff-body); color: var(--ink);
+    background: #fff; border: 1px solid var(--rule);
+    border-radius: var(--radius); padding: 48px 56px;
+    box-shadow: 0 2px 16px rgba(0,0,0,.06);
+}
+#exec-summary h4 {
+    font-family: var(--ff-display); font-size: 18px;
+    font-weight: 700; margin-bottom: 16px;
+}
+#exec-summary p { margin-bottom: 14px; }
+#exec-summary .exec-divider { border: none; border-top: 1px solid var(--rule); margin: 20px 0; }
+#exec-summary .exec-kv {
+    display: grid; grid-template-columns: 150px 1fr;
+    gap: 6px 16px; font-size: 13.5px; margin-bottom: 14px;
+}
+#exec-summary .exec-kv dt {
+    font-family: var(--ff-mono); font-size: 11px;
+    letter-spacing: .08em; color: var(--ink-3);
+    text-transform: uppercase; padding-top: 2px;
+}
+@media (max-width: 560px) {
+    #exec-summary { padding: 28px 20px; }
+    #exec-summary .exec-kv { grid-template-columns: 1fr; }
+}
+
+/* ── Detail lock ───────────────────────────────────────────── */
+#detail-lock-wrap {
+    text-align: center; padding: 56px 24px;
+    border: 1px dashed var(--rule); border-radius: var(--radius);
+    margin-bottom: 40px;
+}
+#detail-lock-wrap .lock-icon { font-size: 32px; display: block; margin-bottom: 16px; opacity: .4; }
+#detail-lock-wrap p {
+    font-size: 14px; color: var(--ink-3); margin-bottom: 20px;
+    font-family: var(--ff-mono); letter-spacing: .04em;
+}
+#unlock-btn {
+    background: var(--ink); color: #fff; border: none;
+    padding: 12px 32px; font-family: var(--ff-mono); font-size: 12px;
+    letter-spacing: .1em; text-transform: uppercase;
+    cursor: pointer; border-radius: var(--radius); transition: opacity .2s;
+}
+#unlock-btn:hover { opacity: .82; }
+#unlock-error {
+    font-size: 12px; color: var(--rojo); font-family: var(--ff-mono);
+    margin-top: 12px; display: none;
+}
+
+/* ── Detail content ────────────────────────────────────────── */
+#detail-summary { display: none; }
+
+.quadrant-block {
+    margin-bottom: 64px; padding-bottom: 48px;
+    border-bottom: 1px solid var(--rule);
+}
+.quadrant-block:last-child { border-bottom: none; margin-bottom: 0; }
+
+.qb-header { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+.qb-color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.qb-title { font-family: var(--ff-display); font-size: 22px; font-weight: 700; }
+.qb-rank {
+    font-family: var(--ff-mono); font-size: 10px;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3);
+}
+.qb-subtitle {
+    font-family: var(--ff-mono); font-size: 12px; color: var(--ink-3);
+    margin-bottom: 28px; padding-left: 24px;
+}
+
+.narrative-section { margin-bottom: 24px; }
+.narrative-section h5 {
+    font-family: var(--ff-mono); font-size: 11px;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 10px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--rule);
+}
+.narrative-section p { font-size: 15px; color: var(--ink-2); margin-bottom: 8px; }
+.narrative-section ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.narrative-section ul li {
+    font-size: 15px; color: var(--ink-2);
+    padding-left: 18px; position: relative;
+}
+.narrative-section ul li::before {
+    content: '›'; position: absolute; left: 0;
+    color: var(--ink-3); font-size: 16px; line-height: 1.5;
+}
+.two-col-list {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5px 24px;
+}
+@media (max-width: 520px) { .two-col-list { grid-template-columns: 1fr; } }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.tag {
+    font-family: var(--ff-mono); font-size: 12px;
+    padding: 4px 12px; border-radius: 2px; border: 1px solid var(--rule);
+}
+.tag.yes { font-weight: 500; }
+.tag.no  { color: var(--ink-3); text-decoration: line-through; }
+
+/* ── Reset btn ─────────────────────────────────────────────── */
+#reset-btn {
+    display: none; margin: 16px auto 80px;
+    background: transparent; border: 1px solid var(--ink); color: var(--ink);
+    padding: 12px 36px; font-family: var(--ff-mono); font-size: 12px;
+    letter-spacing: .1em; text-transform: uppercase;
+    cursor: pointer; border-radius: var(--radius);
+    transition: background .2s, color .2s;
+}
+#reset-btn:hover { background: var(--ink); color: #fff; }
+
+/* ── Animations ────────────────────────────────────────────── */
+.result-anim { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+.result-anim.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <header>
+        <p class="header-label">Modelo Herrmann</p>
+        <h1>Test de Autoconocimiento<br><em>del Cerebro Completo</em></h1>
+        <p>Responde cada pregunta eligiendo la opción que mejor te describe en tu contexto habitual de trabajo. No hay respuestas correctas ni incorrectas.</p>
+    </header>
+
+    <!-- ── Quiz ────────────────────────────────────────────── -->
+    <section id="quiz-section">
+        <div class="color-bar">
+            <span class="b"></span><span class="g"></span>
+            <span class="r"></span><span class="y"></span>
+        </div>
+        <div id="progress-wrap">
+            <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+            <span id="progress-label">0 / 12</span>
+        </div>
+        <div id="questions-container"></div>
+        <div id="submit-wrap">
+            <button id="submit-btn" disabled>Ver mis resultados</button>
+            <span id="form-error">Por favor responde todas las preguntas antes de continuar.</span>
+        </div>
+    </section>
+
+    <!-- ── Results ─────────────────────────────────────────── -->
+    <section id="results-section">
+
+        <!-- 1. Cuadrantes -->
+        <div class="result-anim">
+            <div class="results-header">
+                <h2>Tus Cuadrantes</h2>
+                <p class="results-subtitle">Distribución de respuestas por perfil · 12 preguntas</p>
+            </div>
+            <div class="score-grid" id="score-grid"></div>
+        </div>
+
+        <!-- 2. Resumen Ejecutivo -->
+        <hr class="section-divider result-anim">
+        <div class="result-anim">
+            <div class="results-header">
+                <h2>Resumen Ejecutivo</h2>
+                <p class="results-subtitle">Tu perfil dominante · Formato una plana</p>
+            </div>
+            <div id="exec-summary"></div>
+        </div>
+
+        <!-- 3. Reporte Detallado -->
+        <hr class="section-divider result-anim">
+        <div class="result-anim">
+            <div class="results-header">
+                <h2>Reporte Detallado</h2>
+                <p class="results-subtitle">Guía para el líder · Acceso restringido</p>
+            </div>
+            <div id="detail-lock-wrap">
+                <span class="lock-icon">🔒</span>
+                <p>Este reporte está dirigido al líder o responsable de equipo.<br>Ingresa la contraseña para acceder.</p>
+                <button id="unlock-btn">Reporte Detallado</button>
+                <p id="unlock-error">Contraseña incorrecta. Intenta nuevamente.</p>
+            </div>
+            <div id="detail-summary"></div>
+        </div>
+
+        <button id="reset-btn">Realizar el test nuevamente</button>
+    </section>
+
+</div>
+
+<script>
+"use strict";
+
+/* ═══════════════════════════════════════════════════════════════
+   CLASS HerrmannTest
+   Encapsula toda la lógica del cuestionario de cerebro completo.
+═══════════════════════════════════════════════════════════════ */
+class HerrmannTest {
+
+    constructor() {
+        /** @type {Object.<number,string>} Respuestas: { índice: 'a'|'b'|'c'|'d' } */
+        this.answers = {};
+        /** Contraseña para el reporte detallado */
+        this.DETAIL_PASSWORD = 'Test2026';
+        /**
+         * Umbral porcentual bajo el cual dos perfiles se consideran
+         * igualmente dominantes y ambos aparecen en el Resumen Ejecutivo.
+         */
+        this.MULTI_THRESHOLD_PCT = 10;
+
+        this._initData();
+        this._bindEvents();
+        this.renderQuestions();
+        this.updateProgress();
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       DATA
+    ───────────────────────────────────────────────────────── */
+
+    /** Inicializa preguntas, clave de scoring y perfiles. */
+    _initData() {
+
+        /** @type {Array<{text:string, options:Array<{key:string,text:string}>}>} */
+        this.QUESTIONS = [
+            {
+                text: "En el desarrollo de tu trabajo o cuando interaccionas con otras personas, necesitas saber/conocer prioritariamente:",
+                options: [
+                    { key:"a", text:"Cuáles son los objetivos del equipo y/o proporcionarlos." },
+                    { key:"b", text:"La «visión global» y el «porqué»." },
+                    { key:"c", text:"Lo que el equipo espera de ti." },
+                    { key:"d", text:"A la gente con la que vas a trabajar." }
+                ]
+            },
+            {
+                text: "Cuando estás en una reunión o entrevista y haces preguntas aclaratorias, estas suelen referirse a:",
+                options: [
+                    { key:"a", text:"El método y los «cómos»." },
+                    { key:"b", text:"La «visión amplia» y el «adónde vamos»; conectar las ideas actuales con las nuevas." },
+                    { key:"c", text:"Los objetivos y resultados." },
+                    { key:"d", text:"El control de la comprensión; te aseguras de que haya adecuada participación y de que la gente se sienta bien." }
+                ]
+            },
+            {
+                text: "Te pones nervioso si:",
+                options: [
+                    { key:"a", text:"Sientes que las personas no están cooperando o tienes que sacrificar el consenso para llegar a una decisión." },
+                    { key:"b", text:"Sientes que el equipo se está desviando del camino o va despacio." },
+                    { key:"c", text:"Piensas que el equipo está decidiendo demasiado rápido sin un proceso adecuado." },
+                    { key:"d", text:"Sientes que el equipo se está perdiendo en detalles." }
+                ]
+            },
+            {
+                text: "Si tuvieras que definirte de algún modo, dirías que normalmente eres:",
+                options: [
+                    { key:"a", text:"Innovador y persuasivo." },
+                    { key:"b", text:"Paciente, buen escuchador y mediador." },
+                    { key:"c", text:"Afirmativo y resolutivo; siempre tomas el mando." },
+                    { key:"d", text:"Fiable y preciso." }
+                ]
+            },
+            {
+                text: "En algunas ocasiones puedes llegar a ser:",
+                options: [
+                    { key:"a", text:"Inconstante: te aburres fácilmente y pierdes el foco." },
+                    { key:"b", text:"Muy exigente, escrupuloso o pedante." },
+                    { key:"c", text:"Indeciso, ya que siempre ves los dos lados de un problema." },
+                    { key:"d", text:"Impaciente y dominante." }
+                ]
+            },
+            {
+                text: "Te gusta que el equipo con el que trabajas:",
+                options: [
+                    { key:"a", text:"Esté concentrado en los resultados." },
+                    { key:"b", text:"Haga brainstorming y piense «fuera de la caja»." },
+                    { key:"c", text:"Disponga de datos e información, y por eso se los suministras." },
+                    { key:"d", text:"Trabaje en una atmósfera en la que la gente se sienta a gusto." }
+                ]
+            },
+            {
+                text: "Te sientes más cómodo:",
+                options: [
+                    { key:"a", text:"Con reglas y procesos claros." },
+                    { key:"b", text:"Teniendo el control, planificando y decidiendo cómo trabajar." },
+                    { key:"c", text:"Ofreciendo ayuda y soporte, y generando participación." },
+                    { key:"d", text:"Pensando más allá, en las posibilidades futuras." }
+                ]
+            },
+            {
+                text: "En las reuniones:",
+                options: [
+                    { key:"a", text:"Te gusta ser diplomático y cuidas no ofender a nadie; no es necesario que hables si no estás de acuerdo." },
+                    { key:"b", text:"Te gusta comunicar: «subir al escenario» y presentar y vender ideas." },
+                    { key:"c", text:"No temes hacer preguntas difíciles; usas razonamientos lógicos; eres muy directo y dices lo que piensas." },
+                    { key:"d", text:"Analizas y describes cómo funcionan las cosas, aportando información relevante." }
+                ]
+            },
+            {
+                text: "Cuando en las reuniones adoptas una posición no participativa, se debe a que:",
+                options: [
+                    { key:"a", text:"Respetas los razonamientos lógicos que se están exponiendo." },
+                    { key:"b", text:"Te gusta la forma en que la información está estructurada." },
+                    { key:"c", text:"Te gusta el ritmo de exploración de ideas que está habiendo." },
+                    { key:"d", text:"Te gusta escuchar y asegurarte de que estás comprendiendo lo argumentado." }
+                ]
+            },
+            {
+                text: "Para ti los desafíos significan que:",
+                options: [
+                    { key:"a", text:"Te gusta crear nuevas ideas/posibilidades e ir «más allá» de las reglas." },
+                    { key:"b", text:"Te gusta animar a los demás, observarlos y estar atento a lo que piensan/sienten." },
+                    { key:"c", text:"Consideras que es mejor tener toda la información necesaria y válida antes de decidir." },
+                    { key:"d", text:"Te estimulan los retos; tienes estándares altos." }
+                ]
+            },
+            {
+                text: "Piensas que el rol en que eres más efectivo es en el de:",
+                options: [
+                    { key:"a", text:"Mediador de conflictos: hace que se concilien diferentes puntos de vista." },
+                    { key:"b", text:"Decisor: el que dirige a los demás hacia el resultado." },
+                    { key:"c", text:"Motivador: entusiasma a los demás con sus ideas o las del equipo." },
+                    { key:"d", text:"Organizador: asegura que las cosas se hacen atentamente, tomándose el tiempo necesario." }
+                ]
+            },
+            {
+                text: "Disfrutas especialmente cuando:",
+                options: [
+                    { key:"a", text:"Las cosas están bien acabadas." },
+                    { key:"b", text:"Ves y utilizas la intuición." },
+                    { key:"c", text:"Se alcanza el objetivo." },
+                    { key:"d", text:"El equipo está cohesionado y hay consenso." }
+                ]
+            }
+        ];
+
+        /**
+         * Clave de corrección (tabla p.4 del PDF ESADE).
+         * @type {Array<Object.<string,string>>}
+         */
+        this.SCORING_KEY = [
+            { a:'azul',    b:'amarillo', c:'verde',    d:'rojo'     },
+            { a:'verde',   b:'amarillo', c:'azul',     d:'rojo'     },
+            { a:'rojo',    b:'azul',     c:'verde',    d:'amarillo' },
+            { a:'amarillo',b:'rojo',     c:'azul',     d:'verde'    },
+            { a:'amarillo',b:'verde',    c:'rojo',     d:'azul'     },
+            { a:'azul',    b:'amarillo', c:'verde',    d:'rojo'     },
+            { a:'verde',   b:'azul',     c:'rojo',     d:'amarillo' },
+            { a:'rojo',    b:'amarillo', c:'azul',     d:'verde'    },
+            { a:'azul',    b:'verde',    c:'amarillo', d:'rojo'     },
+            { a:'amarillo',b:'rojo',     c:'verde',    d:'azul'     },
+            { a:'rojo',    b:'azul',     c:'amarillo', d:'verde'    },
+            { a:'verde',   b:'amarillo', c:'azul',     d:'rojo'     }
+        ];
+
+        /** @type {Object.<string,Object>} Datos de cada perfil */
+        this.PROFILES = {
+            azul: {
+                name:'Azul', style:'Pragmático', disc:'Dominancia (D)',
+                orientation:'Propósito', question:'¿Qué queremos conseguir aquí?',
+                color:'#1a3a6b',
+                exec: {
+                    intro: `Tu resultado te sitúa principalmente en el cuadrante <strong>Azul</strong>, cuyo estilo es el del <em>perfil pragmático</em>. Tienes una orientación natural hacia los <strong>resultados, los objetivos y la toma de decisiones</strong>. Cuando entras a una reunión, tu primera pregunta es: «¿Qué queremos lograr aquí?».`,
+                    strengths: `Eres una persona directa, resuelta y con iniciativa. Te sientes cómodo tomando el mando y marcando el rumbo, y tus compañeros probablemente te perciben como alguien que organiza lo importante, mira hacia adelante y no teme afrontar retos. Tu energía natural te lleva a iniciar proyectos y a empujar para que las cosas sucedan.`,
+                    watchout: `Como en todo perfil, también hay áreas donde conviene poner atención. Bajo presión, puedes mostrar impaciencia o una exigencia que resulta difícil para quienes te rodean. Dedicar un momento a escuchar activamente y considerar el ritmo de los demás puede fortalecer mucho tu efectividad.`,
+                    ideal: `Te desenvuelves mejor en entornos donde tienes autonomía, donde el éxito se mide por resultados concretos y donde puedes afrontar desafíos nuevos con frecuencia. La rutina y el exceso de control ajeno tienden a limitarte.`,
+                    closing: `Este perfil refleja cómo procesas la información y cómo te relacionas con los demás en contextos de trabajo. No es una etiqueta definitiva, sino una herramienta de autoconocimiento para potenciar tus fortalezas y gestionar tus áreas de mejora.`
+                },
+                detail: {
+                    quien: `Esta persona tiene un estilo <strong>pragmático y orientado a la acción</strong>. Su motor interno es el logro: necesita saber cuáles son los objetivos, perseguirlos con decisión y ver resultados concretos. Actúa con rapidez, toma iniciativas y asume riesgos de forma natural. En el equipo, suele ser quien marca el ritmo y organiza las prioridades más importantes.`,
+                    descriptors: ['Directiva y afirmativa','Orientada a resultados','Analítica y decisora','Emprendedora y competitiva','Persistente y resolutiva','Asume riesgos calculados'],
+                    bright: ['Organiza y prioriza lo que realmente importa','Impulsa al equipo hacia adelante con visión de futuro','Inicia actividades y marca el rumbo con claridad','No teme los desafíos; los convierte en oportunidades'],
+                    dark: ['Puede volverse impaciente y perder el tacto bajo presión','Tiende a ser agresiva o argumentativa cuando se le contradice','Puede asumir demasiadas responsabilidades demasiado rápido','El exceso de exigencia puede generar tensión en el equipo'],
+                    ambiente: ['Libre de supervisión excesiva y microgestión','Evaluación basada en resultados, no en procesos ni tiempos','Entorno innovador, orientado al futuro y con variedad de tareas','Espacio para expresar sus ideas y opiniones sin filtro'],
+                    motivar: ['Permítale controlar su ámbito de responsabilidad','Dele poder y autoridad real para alcanzar resultados','Reconozca su posición y logros con visibilidad','Ofrézcale desafíos nuevos con frecuencia','Asegúrese de que pueda avanzar y crecer rápidamente'],
+                    liderar: ['Explique claramente los resultados esperados, no los procesos','Confronte los desacuerdos cara a cara y con datos','Asígnele tareas desafiantes con impacto real','Ayúdele a desarrollar paciencia y empatía hacia los demás','Fórmele en habilidades de escucha activa'],
+                    comunicar: ['Sea claro, específico y vaya preparado a cualquier conversación','Presente hechos y datos de forma lógica y eficiente','Déle alternativas para que tome sus propias decisiones','Motive refiriéndose siempre a resultados','Cree situaciones donde ambas partes ganen'],
+                    no_comunicar: ['No divague ni pierda el tiempo con preámbulos','No muestre desorganización ni indecisión','No haga preguntas sin propósito claro','No llegue con la decisión ya tomada si espera su participación','No le mande ni le ordene; negocie en pie de igualdad'],
+                    words_yes: ['Ganar','Liderar','Resultados','Ahora','Nuevo','Desafío'],
+                    words_no: ['«Sigue mis indicaciones»','«En mi opinión»','Interrupciones frecuentes']
+                }
+            },
+            verde: {
+                name:'Verde', style:'Teórico', disc:'Cumplimiento (C)',
+                orientation:'Procesos', question:'¿Cómo podemos conseguirlo?',
+                color:'#2d6a3f',
+                exec: {
+                    intro: `Tu resultado te sitúa principalmente en el cuadrante <strong>Verde</strong>, cuyo estilo es el del <em>perfil teórico</em>. Tienes una orientación natural hacia los <strong>procesos, los métodos y la precisión</strong>. Cuando abordas un reto, tu primera pregunta es: «¿Cómo lo vamos a hacer correctamente?».`,
+                    strengths: `Eres una persona fiable, meticulosa y con altos estándares. Te tomas el tiempo necesario para analizar la información antes de actuar, y los demás confían en ti precisamente por eso. Tienes la habilidad de hacer las preguntas correctas, clarificar lo que no está definido y garantizar que las cosas se hagan bien desde el principio.`,
+                    watchout: `Bajo presión, puedes tender al perfeccionismo excesivo o a perderte en los detalles, lo que a veces ralentiza el avance del equipo. También puede ocurrir que adoptes una postura defensiva cuando alguien cuestiona tu trabajo. Practicar la flexibilidad y ampliar la visión de conjunto puede ser muy valioso para ti.`,
+                    ideal: `Te desenvuelves mejor en entornos donde se valora la calidad, donde puedes trabajar con profundidad técnica y donde las tareas tienen un inicio y un final claros. El caos, los cambios bruscos y la improvisación tienden a incomodarte.`,
+                    closing: `Este perfil refleja cómo procesas la información y cómo te relacionas con los demás en contextos de trabajo. No es una etiqueta definitiva, sino una herramienta de autoconocimiento para potenciar tus fortalezas y gestionar tus áreas de mejora.`
+                },
+                detail: {
+                    quien: `Esta persona tiene un estilo <strong>teórico y orientado a la calidad</strong>. Su motor interno es la excelencia: necesita entender los procedimientos, disponer de toda la información relevante y asegurarse de que las cosas se hacen bien. Actúa de forma metódica, paciente y sistemática. En el equipo, suele ser quien garantiza los estándares, clarifica los procesos y formula las preguntas que otros no se atreven a hacer.`,
+                    descriptors: ['Precisa y concienzuda','Disciplinada y fiable','Sigue el método con rigor','Investigadora con altos estándares','Madura, paciente y sistemática','Cortés y diplomática'],
+                    bright: ['Mantiene los estándares de calidad del equipo','Define, clarifica, obtiene información y la verifica','Formula las preguntas correctas en el momento adecuado','Es constante y confiable en la ejecución de tareas'],
+                    dark: ['Puede caer en el pesimismo o la crítica excesiva bajo presión','Tiende a ponerse a la defensiva ante cuestionamientos de su trabajo','Se pierde en los detalles y puede frenar el avance del equipo','Puede dar la impresión de ser fría o distante con los demás'],
+                    ambiente: ['Entorno donde se premia el pensamiento crítico y la calidad','Tareas técnicas especializadas que puedan seguirse de inicio a fin','Espacio de trabajo sin excesivo ruido o interrupción','Relaciones profundas con un grupo reducido de personas de confianza'],
+                    motivar: ['Ofrézcale procedimientos claros y documentados','Asegúrele que sus estándares de calidad son valorados','Confirme regularmente que está haciendo bien el trabajo','Proporciónele toda la información disponible antes de decidir','Involúcrele en la resolución de problemas complejos y técnicos'],
+                    liderar: ['Involúcrele en la definición e implementación de estándares','Defina claramente los requisitos y expectativas del trabajo','Déle la oportunidad de terminar lo que empieza','Establezca metas medibles y alcanzables con plazos claros','Involúcrele en la planificación a largo plazo'],
+                    comunicar: ['Use un enfoque reflexivo y directo; gane su confianza siendo minucioso','Presente detalles específicos y cumpla siempre lo que promete','Establezca planes de acción con fechas y acciones concretas','Déle tiempo e información suficiente para tomar decisiones','Si discrepa, argumente con datos o testimonios de fuentes respetadas'],
+                    no_comunicar: ['No sea desorganizado ni informal en sus presentaciones','No fuerce una decisión rápida sin tiempo para analizar','No sea excesivamente optimista; use estimaciones conservadoras','No use opiniones o sentimientos como argumento principal','No la toque; respete su espacio personal'],
+                    words_yes: ['«Estos son los hechos»','Sin riesgos','Probado','Análisis','Garantizado'],
+                    words_no: ['«No está comprobado»','Innovador','Suposición','Experimental']
+                }
+            },
+            rojo: {
+                name:'Rojo', style:'Afable', disc:'Estabilidad (S)',
+                orientation:'Personas', question:'¿Cómo podemos trabajar juntos?',
+                color:'#c0392b',
+                exec: {
+                    intro: `Tu resultado te sitúa principalmente en el cuadrante <strong>Rojo</strong>, cuyo estilo es el del <em>perfil afable</em>. Tienes una orientación natural hacia las <strong>personas, la armonía y el trabajo en equipo</strong>. Cuando te incorporas a un proyecto, tu primera pregunta es: «¿Cómo vamos a trabajar bien juntos?».`,
+                    strengths: `Eres una persona con una gran capacidad para escuchar, generar confianza y construir relaciones duraderas. Tienes paciencia, empatía y una lealtad genuina hacia quienes te rodean. En el equipo, eres el ancla emocional: quienes trabajan contigo saben que pueden contar contigo y que te importa el bienestar colectivo.`,
+                    watchout: `Bajo presión, puedes tender a ceder para evitar conflictos, aunque eso no sea lo más conveniente. También puede costarte establecer prioridades claras o adaptarte con rapidez a los cambios. Desarrollar la asertividad y la capacidad de gestionar la incertidumbre te abrirá muchas puertas.`,
+                    ideal: `Te desenvuelves mejor en entornos estables, donde las relaciones tienen tiempo para madurar y donde existe un sentido de pertenencia claro. Los cambios bruscos, la falta de reconocimiento y los entornos muy competitivos tienden a afectarte.`,
+                    closing: `Este perfil refleja cómo procesas la información y cómo te relacionas con los demás en contextos de trabajo. No es una etiqueta definitiva, sino una herramienta de autoconocimiento para potenciar tus fortalezas y gestionar tus áreas de mejora.`
+                },
+                detail: {
+                    quien: `Esta persona tiene un estilo <strong>afable y orientado a las personas</strong>. Su motor interno es la armonía: necesita sentirse parte de un equipo cohesionado, saber que sus relaciones son estables y que su contribución es valorada. Actúa con paciencia, lealtad y una escucha genuina. En el equipo, suele ser quien mantiene el clima emocional, gestiona las tensiones de fondo y se asegura de que nadie quede atrás.`,
+                    descriptors: ['Amigable y sincera','Paciente y comprensiva','Excelente escuchadora','Estable y servicial','Leal y comprometida a largo plazo','Sistemática y metódica'],
+                    bright: ['Miembro del equipo confiable y comprometido','Crea un clima de trabajo positivo y de confianza mutua','Escucha con genuino interés y recuerda lo que importa a cada persona','Actúa como nexo emocional en momentos de tensión grupal'],
+                    dark: ['Cede ante el conflicto aunque no sea la decisión correcta','Le cuesta establecer prioridades en situaciones de múltiples demandas','La resistencia al cambio puede frenar su adaptación','Bajo presión extrema, puede desvincularse o quedar paralizada'],
+                    ambiente: ['Entornos con métodos y estándares ya establecidos','Contextos donde las relaciones de trabajo sean duraderas y auténticas','Reconocimiento personal y continuo por las tareas bien realizadas','Tiempo suficiente para asimilar los cambios antes de implementarlos'],
+                    motivar: ['Explique los cambios con anticipación para que pueda prepararse','Ofrézcale reconocimiento genuino por su lealtad y servicio','Asegúrele estabilidad y claridad sobre lo que se espera de ella','Involúcrele en la planificación a largo plazo del equipo','Permítale desarrollar relaciones con un grupo estable de personas'],
+                    liderar: ['Haga un esfuerzo sincero por conocer sus necesidades personales','Déle la oportunidad de terminar lo que empieza sin interrupciones','Asígnele proyectos de mayor alcance pero en menor cantidad','Anime su participación activa en reuniones; su perspectiva es valiosa','Ayúdele con cuidado a alcanzar nuevos niveles de responsabilidad'],
+                    comunicar: ['Muestre interés sincero por ella como persona, no solo como colaboradora','Presente los argumentos de forma lógica, suave y no amenazadora','Haga preguntas del tipo «¿Cómo te sientes con esto?»','Déle garantías claras y tiempo para reflexionar antes de decidir','Use un tono cálido, informal y cercano en el día a día'],
+                    no_comunicar: ['No vaya directo al grano sin un momento de conexión personal primero','No la fuerce a responder o decidir bajo presión de tiempo','No use su posición de autoridad de forma dominante','No la interrumpa; escúchela hasta el final antes de responder','No prometa cosas que no pueda cumplir; valora profundamente la palabra dada'],
+                    words_yes: ['Paso a paso','Ayúdame','Garantizado','Promesa','Piensa en alto'],
+                    words_no: ['Un cambio radical','Innovación disruptiva','Jugar para ganar']
+                }
+            },
+            amarillo: {
+                name:'Amarillo', style:'Activo', disc:'Influencia (I)',
+                orientation:'Posibilidades', question:'¿Cómo podemos innovar?',
+                color:'#c8920a',
+                exec: {
+                    intro: `Tu resultado te sitúa principalmente en el cuadrante <strong>Amarillo</strong>, cuyo estilo es el del <em>perfil activo</em>. Tienes una orientación natural hacia las <strong>posibilidades, la innovación y las personas</strong>. Cuando entras a un proyecto, tu primera pregunta es: «¿Cómo podemos hacerlo de una forma diferente y mejor?».`,
+                    strengths: `Eres una persona entusiasta, sociable y con una gran capacidad para inspirar a los demás. Tienes la habilidad natural de generar energía positiva, motivar al equipo y ver oportunidades donde otros ven obstáculos. Tu creatividad y tu facilidad para conectar con las personas te convierten en un activo muy valioso en cualquier equipo.`,
+                    watchout: `Bajo presión, puedes tender a ser demasiado optimista, a descuidar los detalles o a dispersarte entre demasiadas ideas al mismo tiempo. Trabajar en la gestión del tiempo y en la concreción de tus propuestas puede marcar una gran diferencia en tu efectividad.`,
+                    ideal: `Te desenvuelves mejor en entornos dinámicos, con variedad de tareas y mucho contacto con personas. Los entornos muy rígidos, llenos de controles y procesos repetitivos tienden a desmotivarte rápidamente.`,
+                    closing: `Este perfil refleja cómo procesas la información y cómo te relacionas con los demás en contextos de trabajo. No es una etiqueta definitiva, sino una herramienta de autoconocimiento para potenciar tus fortalezas y gestionar tus áreas de mejora.`
+                },
+                detail: {
+                    quien: `Esta persona tiene un estilo <strong>activo y orientado a la influencia</strong>. Su motor interno es la conexión: necesita interactuar, inspirar a los demás y encontrar formas creativas de abordar los retos. Actúa con entusiasmo, rapidez y una energía que contagia al entorno. En el equipo, suele ser quien genera ideas, motiva a los demás y negocia los conflictos con naturalidad.`,
+                    descriptors: ['Encantadora y persuasiva','Segura y entusiasta','Sociable e inspiradora','Abierta de mente y optimista','Popular y convincente','Orientada al cambio y a la experiencia'],
+                    bright: ['Contagia optimismo y energía positiva al equipo','Resuelve problemas con creatividad e imaginación','Motiva a otros a alcanzar metas que solos no verían','Negocia conflictos con facilidad y actúa como puente entre personas'],
+                    dark: ['Puede ser demasiado optimista y poco realista en sus estimaciones','Tiende a dispersarse entre muchas ideas sin concretar ninguna','Confía en los demás de forma indiscriminada, lo que puede crear riesgos','Escucha solo lo que le interesa; puede perder detalles críticos'],
+                    ambiente: ['Tareas con mucho contacto e interacción con otras personas','Roles que requieran motivar, persuadir y crear redes de contacto','Liderazgo con estilo democrático y abierto','Libertad del control y de los detalles operativos','Trabajo variado con tareas que cambien con cierta frecuencia'],
+                    motivar: ['Ofrézcale reconocimiento público y visibilidad ante sus pares','Déle libertad para hablar, proponer y moverse con autonomía','Permítale identificarse con el grupo y con la causa del equipo','Varíe sus tareas con frecuencia; la monotonía la desmotiva rápidamente','Brinde recompensas tangibles y condiciones laborales favorables'],
+                    liderar: ['Ayúdele a traducir sus ideas en objetivos concretos y medibles','Trabaje con ella la gestión del tiempo y el foco','Establezca una política de puertas abiertas para sus propuestas','Colóquela en entornos donde pueda interactuar y también terminar tareas','Entrénele en cómo adaptarse a los estilos de los demás'],
+                    comunicar: ['Dedique tiempo a socializar antes de entrar al tema de trabajo','Pida su opinión; se sentirá valorada y comprometida','Use un tono entusiasta, energético y amistoso','Hable de sentimientos, experiencias y del impacto en las personas','Provea ideas concretas para implementar a continuación de la conversación'],
+                    no_comunicar: ['No sea frío, brusco o excesivamente formal','No centre la conversación solo en datos y cifras','No deje decisiones sin cerrar al final de la reunión','No acorte los intercambios; necesita tiempo para procesar hablando','No se oriente exclusivamente hacia tareas o procesos; incluya la dimensión humana'],
+                    words_yes: ['Diversión','Emoción','Sociable','Experiencia','Esto te hará destacar'],
+                    words_no: ['Teóricamente','Lo mismo para todos','Sofisticado','Requiere de estudio']
+                }
+            }
+        };
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       RENDER — QUIZ
+    ───────────────────────────────────────────────────────── */
+
+    /** Construye y renderiza el formulario de preguntas. */
+    renderQuestions() {
+        const container = document.getElementById('questions-container');
+        container.innerHTML = '';
+
+        this.QUESTIONS.forEach((q, idx) => {
+            const block = document.createElement('div');
+            block.className = 'question-block';
+            block.style.animationDelay = `${idx * 0.06}s`;
+            block.innerHTML = `
+                <p class="q-number">Pregunta ${idx + 1} de ${this.QUESTIONS.length}</p>
+                <p class="q-text">${q.text}</p>
+                <div class="options"></div>
+            `;
+            const opts = block.querySelector('.options');
+            q.options.forEach(opt => {
+                const label = document.createElement('label');
+                label.className = 'option-label';
+                label.dataset.q = idx;
+                label.dataset.k = opt.key;
+                label.innerHTML = `
+                    <input type="radio" name="q${idx}" value="${opt.key}">
+                    <span class="opt-key">${opt.key.toUpperCase()}</span>
+                    <span>${opt.text}</span>
+                `;
+                label.addEventListener('click', () => this._handleAnswer(idx, opt.key, block));
+                opts.appendChild(label);
+            });
+            container.appendChild(block);
+        });
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       HANDLERS — QUIZ
+    ───────────────────────────────────────────────────────── */
+
+    /**
+     * Registra la respuesta y actualiza la UI de la pregunta.
+     * @param {number} qIdx
+     * @param {string} key
+     * @param {HTMLElement} block
+     */
+    _handleAnswer(qIdx, key, block) {
+        this.answers[qIdx] = key;
+        block.querySelectorAll('.option-label').forEach(lbl => {
+            lbl.classList.toggle('selected', lbl.dataset.k === key);
+            lbl.querySelector('input[type="radio"]').checked = lbl.dataset.k === key;
+        });
+        this.updateProgress();
+    }
+
+    /** Actualiza la barra de progreso y el estado del botón submit. */
+    updateProgress() {
+        const answered = Object.keys(this.answers).length;
+        const pct = (answered / this.QUESTIONS.length) * 100;
+        document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+        document.getElementById('progress-label').textContent = `${answered} / ${this.QUESTIONS.length}`;
+        document.getElementById('submit-btn').disabled = answered < this.QUESTIONS.length;
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       SCORING
+    ───────────────────────────────────────────────────────── */
+
+    /**
+     * Calcula los puntajes por color.
+     * @returns {{ azul:number, verde:number, rojo:number, amarillo:number }}
+     */
+    calculateScores() {
+        const scores = { azul:0, verde:0, rojo:0, amarillo:0 };
+        Object.entries(this.answers).forEach(([qIdx, key]) => {
+            const color = this.SCORING_KEY[parseInt(qIdx)][key];
+            if (color) scores[color]++;
+        });
+        return scores;
+    }
+
+    /**
+     * Devuelve los perfiles a mostrar en el Resumen Ejecutivo.
+     * Incluye todos los que estén dentro del umbral del dominante.
+     * @param {{ azul:number, verde:number, rojo:number, amarillo:number }} scores
+     * @returns {string[]} colores ordenados de mayor a menor
+     */
+    getExecProfiles(scores) {
+        const total  = this.QUESTIONS.length;
+        const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+        const topPct = (sorted[0][1] / total) * 100;
+        return sorted
+            .filter(([, s]) => topPct - (s / total) * 100 < this.MULTI_THRESHOLD_PCT)
+            .map(([c]) => c);
+    }
+
+    /**
+     * Devuelve todos los colores ordenados de mayor a menor puntaje.
+     * @param {{ azul:number, verde:number, rojo:number, amarillo:number }} scores
+     * @returns {string[]}
+     */
+    getAllSorted(scores) {
+        return Object.entries(scores).sort((a, b) => b[1] - a[1]).map(([c]) => c);
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       RENDER — SCORE CARDS
+    ───────────────────────────────────────────────────────── */
+
+    /**
+     * Renderiza las 4 tarjetas de puntaje.
+     * @param {{ azul:number, verde:number, rojo:number, amarillo:number }} scores
+     * @param {string[]} execProfiles
+     */
+    renderScoreCards(scores, execProfiles) {
+        const grid  = document.getElementById('score-grid');
+        grid.innerHTML = '';
+        const total = this.QUESTIONS.length;
+
+        this.getAllSorted(scores).forEach(color => {
+            const p     = this.PROFILES[color];
+            const score = scores[color];
+            const pct   = Math.round((score / total) * 100);
+            const isDom = execProfiles.includes(color);
+
+            const card = document.createElement('div');
+            card.className = `score-card ${color}${isDom ? ' dominant' : ''}`;
+            card.innerHTML = `
+                <p class="sc-label ${color}">${p.name} · ${p.style}</p>
+                <p class="sc-name">${p.orientation}</p>
+                <div class="sc-bar-row">
+                    <p class="sc-score-label">${score} / ${total} resp.</p>
+                    <div class="sc-bar-track">
+                        <div class="sc-bar-fill ${color}" id="bar-${color}"></div>
+                    </div>
+                    <p class="sc-pct" style="color:${p.color};">${pct}%</p>
+                </div>
+            `;
+            grid.appendChild(card);
+            setTimeout(() => {
+                document.getElementById(`bar-${color}`).style.width = `${pct}%`;
+            }, 200);
+        });
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       RENDER — EXECUTIVE SUMMARY
+    ───────────────────────────────────────────────────────── */
+
+    /**
+     * Construye el resumen ejecutivo en segunda persona, sin jerga técnica.
+     * @param {string[]} execProfiles
+     * @param {{ azul:number, verde:number, rojo:number, amarillo:number }} scores
+     */
+    renderExecutiveSummary(execProfiles, scores) {
+        const container = document.getElementById('exec-summary');
+        const now   = new Date().toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' });
+        const total = this.QUESTIONS.length;
+
+        const profileNames = execProfiles
+            .map(c => `${this.PROFILES[c].name} (${this.PROFILES[c].style})`)
+            .join(' / ');
+
+        // Construir tabla de puntajes correctamente (getAllSorted devuelve strings)
+        const scoreRowStr = this.getAllSorted(scores)
+            .map(c => `${this.PROFILES[c].name}&nbsp;${scores[c]}`)
+            .join(' &nbsp;·&nbsp; ');
+
+        let mainText = '';
+        if (execProfiles.length === 1) {
+            const p = this.PROFILES[execProfiles[0]];
+            mainText = `
+                <p>${p.exec.intro}</p>
+                <p>${p.exec.strengths}</p>
+                <p>${p.exec.watchout}</p>
+                <p>${p.exec.ideal}</p>
+            `;
+        } else {
+            mainText = execProfiles.map((color, i) => {
+                const p   = this.PROFILES[color];
+                const pct = Math.round((scores[color] / total) * 100);
+                return `
+                    <p><strong>${i + 1}. Perfil ${p.name} — ${p.style} (${pct}%)</strong></p>
+                    <p>${p.exec.intro}</p>
+                    <p>${p.exec.strengths}</p>
+                    ${i < execProfiles.length - 1 ? '<hr class="exec-divider">' : ''}
+                `;
+            }).join('');
+            mainText += `
+                <p>Tener más de un perfil con puntajes muy cercanos es completamente normal e indica que eres una persona con <strong>flexibilidad cognitiva</strong>: puedes adaptar tu estilo según el contexto. Presta atención a cuál de los dos emerge con más fuerza en situaciones de presión, pues ese suele ser tu perfil más profundo.</p>
+            `;
+        }
+
+        container.innerHTML = `
+            <h4>Tu Perfil de Autoconocimiento</h4>
+            <hr class="exec-divider">
+            <dl class="exec-kv">
+                <dt>Fecha</dt>        <dd>${now}</dd>
+                <dt>Tu perfil</dt>    <dd>${profileNames}</dd>
+                <dt>Orientación</dt>  <dd>${execProfiles.map(c => this.PROFILES[c].question).join(' / ')}</dd>
+                <dt>Puntuaciones</dt> <dd>${scoreRowStr}</dd>
+            </dl>
+            <hr class="exec-divider">
+            ${mainText}
+            <p>${this.PROFILES[execProfiles[0]].exec.closing}</p>
+            <hr class="exec-divider">
+            <p style="font-size:12.5px;color:#777;">
+                Este perfil se basa en el Cuestionario de Autoconocimiento del Cerebro Completo. 
+                Debe interpretarse como una herramienta de desarrollo personal, no como un diagnóstico definitivo.
+            </p>
+        `;
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       RENDER — DETAILED REPORT
+    ───────────────────────────────────────────────────────── */
+
+    /**
+     * Construye el reporte detallado dirigido al líder.
+     * @param {string[]} allSorted
+     * @param {{ azul:number, verde:number, rojo:number, amarillo:number }} scores
+     */
+    renderDetailedSummary(allSorted, scores) {
+        const container = document.getElementById('detail-summary');
+        container.innerHTML = '';
+        const total  = this.QUESTIONS.length;
+        const labels = ['PRIMARIO','SECUNDARIO','TERCIARIO','LATENTE'];
+
+        // Encabezado del reporte
+        const header = document.createElement('div');
+        header.style.cssText = 'margin-bottom:40px;padding:24px 28px;background:#fff;border:1px solid var(--rule);border-radius:var(--radius);';
+        header.innerHTML = `
+            <p style="font-family:var(--ff-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;">
+                Reporte Detallado · Guía para el Líder
+            </p>
+            <p style="font-size:15px;color:var(--ink-2);line-height:1.65;">
+                Este documento está concebido como una guía práctica para quien lidera o gestiona
+                a la persona que realizó el test. Contiene recomendaciones concretas sobre cómo
+                motivarla, comunicarse con ella, liderarla y crear el entorno donde puede
+                dar lo mejor de sí misma. Los cuatro cuadrantes aparecen en orden de dominancia.
+            </p>
+        `;
+        container.appendChild(header);
+
+        allSorted.forEach((color, rank) => {
+            const p     = this.PROFILES[color];
+            const d     = p.detail;
+            const score = scores[color];
+            const pct   = Math.round((score / total) * 100);
+
+            const block = document.createElement('div');
+            block.className = 'quadrant-block';
+
+            // Header del cuadrante
+            block.innerHTML = `
+                <div class="qb-header">
+                    <div class="qb-color-dot" style="background:${p.color};"></div>
+                    <h3 class="qb-title">${p.name} — ${p.style}</h3>
+                    <span class="qb-rank">${labels[rank]}</span>
+                </div>
+                <p class="qb-subtitle">
+                    ${score}/${total} respuestas · ${pct}% &nbsp;·&nbsp;
+                    ${p.disc} &nbsp;·&nbsp; ${p.orientation}: «${p.question}»
+                </p>
+            `;
+
+            // Secciones narrativas
+            block.appendChild(this._narrativeSection('¿Quién es esta persona?',
+                `<p>${d.quien}</p>`
+            ));
+            block.appendChild(this._narrativeSection('Rasgos característicos',
+                `<ul class="two-col-list">${d.descriptors.map(t => `<li>${t}</li>`).join('')}</ul>`
+            ));
+            block.appendChild(this._narrativeSection('Sus fortalezas en el equipo',
+                `<ul>${d.bright.map(t => `<li>${t}</li>`).join('')}</ul>`
+            ));
+            block.appendChild(this._narrativeSection('Riesgos a gestionar',
+                `<ul>${d.dark.map(t => `<li>${t}</li>`).join('')}</ul>`
+            ));
+            block.appendChild(this._narrativeSection('Entorno donde da lo mejor de sí',
+                `<ul>${d.ambiente.map(t => `<li>${t}</li>`).join('')}</ul>`
+            ));
+            block.appendChild(this._narrativeSection('Cómo motivarle',
+                `<ul>${d.motivar.map(t => `<li>${t}</li>`).join('')}</ul>`
+            ));
+            block.appendChild(this._narrativeSection('Cómo liderarle',
+                `<ul>${d.liderar.map(t => `<li>${t}</li>`).join('')}</ul>`
+            ));
+            block.appendChild(this._narrativeSection('Comunicación efectiva',
+                `<ul>${d.comunicar.map(t => `<li>${t}</li>`).join('')}</ul>
+                 <p style="margin-top:14px;font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);">Evite:</p>
+                 <ul>${d.no_comunicar.map(t => `<li>${t}</li>`).join('')}</ul>`
+            ));
+            block.appendChild(this._narrativeSection('Vocabulario recomendado',
+                `<div style="margin-bottom:14px;">
+                    <p style="font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;">Palabras que conectan</p>
+                    <div class="tag-row">${d.words_yes.map(w => `<span class="tag yes" style="color:${p.color};border-color:${p.color};">${w}</span>`).join('')}</div>
+                </div>
+                <div>
+                    <p style="font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;">Palabras que alejan</p>
+                    <div class="tag-row">${d.words_no.map(w => `<span class="tag no">${w}</span>`).join('')}</div>
+                </div>`
+            ));
+
+            container.appendChild(block);
+        });
+    }
+
+    /**
+     * Crea un bloque de sección narrativa con título y contenido HTML.
+     * @param {string} title
+     * @param {string} bodyHtml
+     * @returns {HTMLElement}
+     */
+    _narrativeSection(title, bodyHtml) {
+        const div = document.createElement('div');
+        div.className = 'narrative-section';
+        div.innerHTML = `<h5>${title}</h5>${bodyHtml}`;
+        return div;
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       FLOW — SUBMIT / UNLOCK / RESET
+    ───────────────────────────────────────────────────────── */
+
+    /** Orquesta el flujo al enviar el formulario. */
+    handleSubmit() {
+        if (Object.keys(this.answers).length < this.QUESTIONS.length) {
+            document.getElementById('form-error').style.display = 'block';
+            return;
+        }
+        document.getElementById('form-error').style.display = 'none';
+
+        const scores       = this.calculateScores();
+        const execProfiles = this.getExecProfiles(scores);
+        const allSorted    = this.getAllSorted(scores);
+
+        const resultsSection = document.getElementById('results-section');
+        resultsSection.style.display = 'block';
+
+        this.renderScoreCards(scores, execProfiles);
+        this.renderExecutiveSummary(execProfiles, scores);
+        this.renderDetailedSummary(allSorted, scores);
+
+        // Animar bloques con IntersectionObserver
+        const animBlocks = resultsSection.querySelectorAll('.result-anim');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08 });
+        animBlocks.forEach(b => observer.observe(b));
+
+        document.getElementById('reset-btn').style.display = 'block';
+        setTimeout(() => {
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+
+    /** Solicita la contraseña y desbloquea el reporte detallado. */
+    handleUnlock() {
+        const pwd = window.prompt('Ingrese la contraseña para acceder al Reporte Detallado:');
+        if (pwd === null) return;
+        if (pwd === this.DETAIL_PASSWORD) {
+            document.getElementById('detail-lock-wrap').style.display = 'none';
+            document.getElementById('detail-summary').style.display   = 'block';
+            document.getElementById('unlock-error').style.display     = 'none';
+        } else {
+            document.getElementById('unlock-error').style.display = 'block';
+        }
+    }
+
+    /** Reinicia el test completamente. */
+    handleReset() {
+        this.answers = {};
+        document.getElementById('results-section').style.display   = 'none';
+        document.getElementById('reset-btn').style.display         = 'none';
+        document.getElementById('detail-lock-wrap').style.display  = 'block';
+        document.getElementById('detail-summary').style.display    = 'none';
+        document.getElementById('unlock-error').style.display      = 'none';
+        this.renderQuestions();
+        this.updateProgress();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       INIT
+    ───────────────────────────────────────────────────────── */
+
+    /** Registra los event listeners de los botones principales. */
+    _bindEvents() {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('submit-btn').addEventListener('click',  () => this.handleSubmit());
+            document.getElementById('unlock-btn').addEventListener('click',  () => this.handleUnlock());
+            document.getElementById('reset-btn').addEventListener('click',   () => this.handleReset());
+        });
+    }
+}
+
+/* ── Bootstrap ─────────────────────────────────────────────── */
+const herrmannTest = new HerrmannTest();
+</script>
+</body>
+</html>

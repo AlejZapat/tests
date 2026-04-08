@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Diagnóstico PMI-PMOCP</title>
+    <link rel="stylesheet" href="diagnostic-exam.css">
+</head>
+<body>
+    <div id="exam-root"></div>
+
+    <script src="pmocp-exam.js"></script>
+    <script src="diagnostic-exam.js"></script>
+    <script>
+        // ─── Instanciación PMI-PMOCP ───────────────────────────────────────────────
+        const exam = new DiagnosticExam({
+            container:  document.getElementById('exam-root'),
+            title:      'PMI-PMOCP (PMO Certified Professional)',
+            questions:  pmoQuestions,
+            examSize:   30,
+            showReset:  false,
+
+            /**
+             * Distribuciones alineadas al ECO PMI-PMOCP (Febrero 2025):
+             *   - domain:    pesos exactos de los 6 dominios del ECO
+             *   - method:    70% predictivo / 20% híbrido / 10% ágil
+             *   - cognitive: pirámide estándar de Bloom adaptada al examen
+             *   - format:    proporciones del banco de 100 preguntas
+             */
+            distributions: {
+                domain: {
+                    'desarrollo_y_alineamiento_organizacional': 0.16,
+                    'elementos_estratégicos_de_la_pmo':         0.18,
+                    'diseño_y_estructura_de_la_pmo':            0.18,
+                    'operación_y_desempeño_de_la_pmo':          0.15,
+                    'mejora_y_efectividad_de_la_pmo':           0.18,
+                    'personas':                                 0.15
+                },
+                method: {
+                    predictivo: 0.70,
+                    híbrido:    0.20,
+                    ágil:       0.10
+                },
+                cognitive: {
+                    conocimiento: 0.20,
+                    aplicación:   0.50,
+                    análisis:     0.30
+                },
+                format: {
+                    'opción_única':    0.65,
+                    'opción_múltiple': 0.25,
+                    ordenamiento:      0.10
+                }
+            },
+
+            /** Dimensiones que aparecen en la tabla de resultados */
+            reportDimensions: ['domain', 'cognitive'],
+
+            /** Etiquetas legibles para la UI */
+            labels: {
+                domain: {
+                    _label:                                      'Dominio',
+                    'desarrollo_y_alineamiento_organizacional':  'Desarrollo y Alineamiento Organizacional',
+                    'elementos_estratégicos_de_la_pmo':          'Elementos Estratégicos de la PMO',
+                    'diseño_y_estructura_de_la_pmo':             'Diseño y Estructura de la PMO',
+                    'operación_y_desempeño_de_la_pmo':           'Operación y Desempeño de la PMO',
+                    'mejora_y_efectividad_de_la_pmo':            'Mejora y Efectividad de la PMO',
+                    'personas':                                   'Personas'
+                },
+                method: {
+                    _label:     'Enfoque',
+                    predictivo: 'Predictivo',
+                    híbrido:    'Híbrido',
+                    ágil:       'Ágil'
+                },
+                cognitive: {
+                    _label:       'Nivel cognitivo',
+                    conocimiento: 'Conocimiento',
+                    aplicación:   'Aplicación',
+                    análisis:     'Análisis'
+                },
+                format: {
+                    _label:            'Formato',
+                    'opción_única':    'Opción única',
+                    'opción_múltiple': 'Opción múltiple',
+                    ordenamiento:      'Ordenamiento'
+                }
+            }
+        });
+    </script>
+</body>
+</html>

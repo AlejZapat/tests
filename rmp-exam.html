@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Diagnóstico PMI-RMP</title>
+    <link rel="stylesheet" href="diagnostic-exam.css">
+</head>
+<body>
+    <div id="rmp-exam"></div>
+
+    <script src="diagnostic-exam.js"></script>
+    <script src="rmp-exam.js"></script>
+    <script>
+        const exam = new DiagnosticExam({
+            container:  document.getElementById('rmp-exam'),
+            title: 'PMI-RMP (Risk Management Professional)',
+            questions:  rmpQuestions,
+            examSize:   30,
+            showReset:  false,
+
+            /**
+             * Distribuciones alineadas al ECO PMI-RMP (May 2022):
+             *   - domain:    pesos exactos de los 5 dominios del ECO
+             *   - method:    80% predictivo / 10% híbrido / 10% ágil
+             *   - cognitive: pirámide estándar de Bloom adaptada al examen
+             *   - format:    proporciones del banco de 60 preguntas
+             */
+            distributions: {
+                domain: {
+                    'estrategia_y_planificación': 0.22,
+                    'identificación_de_riesgos':  0.23,
+                    'análisis_de_riesgos':         0.23,
+                    'respuesta_a_riesgos':         0.13,
+                    'monitoreo_y_cierre':          0.19
+                },
+                method: {
+                    predictivo: 0.80,
+                    híbrido:    0.10,
+                    ágil:       0.10
+                },
+                cognitive: {
+                    conocimiento: 0.20,
+                    aplicación:   0.50,
+                    análisis:     0.30
+                },
+                format: {
+                    'opción_única':    0.65,
+                    'opción_múltiple': 0.25,
+                    ordenamiento:      0.10
+                }
+            },
+
+            /** Dimensiones que aparecen en la tabla de resultados */
+            reportDimensions: ['domain', 'cognitive'],
+
+            /** Etiquetas legibles para la UI */
+            labels: {
+                domain: {
+                    _label:                        'Dominio',
+                    'estrategia_y_planificación':  'Estrategia y Planificación',
+                    'identificación_de_riesgos':   'Identificación de Riesgos',
+                    'análisis_de_riesgos':          'Análisis de Riesgos',
+                    'respuesta_a_riesgos':          'Respuesta a Riesgos',
+                    'monitoreo_y_cierre':           'Monitoreo y Cierre'
+                },
+                method: {
+                    _label:     'Enfoque',
+                    predictivo: 'Predictivo',
+                    híbrido:    'Híbrido',
+                    ágil:       'Ágil'
+                },
+                cognitive: {
+                    _label:       'Nivel cognitivo',
+                    conocimiento: 'Conocimiento',
+                    aplicación:   'Aplicación',
+                    análisis:     'Análisis'
+                },
+                format: {
+                    _label:            'Formato',
+                    'opción_única':    'Opción única',
+                    'opción_múltiple': 'Opción múltiple',
+                    ordenamiento:      'Ordenamiento'
+                }
+            }
+        });
+    </script>
+</body>
+</html>
